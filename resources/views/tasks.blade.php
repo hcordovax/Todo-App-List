@@ -7,11 +7,10 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center">    
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ $todolist->name }}</div>
-
                 <div class="card-body">
                 @if (session('status'))
                         <div class="alert alert-success" role="alert">
@@ -34,7 +33,8 @@
                         <input type="text" name="task">
                         <input type="submit" value="Create SubTask" >
                     </form> -->
-
+                    <a href="/home" class="btn btn-outline-secondary text-dark  float-right" >Back</a>
+                    <br><br>
                     <form action="/tasks/{{$todolist->id}}/new_task" method="POST">
                         @csrf
                         <div class="row">
@@ -95,6 +95,7 @@
                             </li>
                             @endforeach
                     </ul>
+                    
                 </div>
             </div>
         </div>

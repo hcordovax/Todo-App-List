@@ -68,30 +68,26 @@
                                                 </div>
 
                                                 <!-- Modal body -->
-                                                <div class="modal-body">
-                                                <form action="/tasks/edit/task/{{$todolist->id}}" method="POST">
-                                                                    @csrf
-                                                                    @method('PUT')
-                                                                    <input type="text" name="name" value="{{ $todolist->name}}">
-                                                                    <button class="btn btn-warning" type="submit">Update</button>
-                                                                </form>
-                                                </div>
-
-                                                
-
+                                                    <div class="modal-body">
+                                                        <form action="/tasks/edit/task/{{$todolist->id}}" method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <input type="text" name="name" value="{{ $todolist->name}}">
+                                                            <button class="btn btn-warning" type="submit">Update</button>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
                                             </div>
-
                                 </div>
                             </li>
                             <br>
                         @endforeach
                     </ul>
-                    
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 @endsection
