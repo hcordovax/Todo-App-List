@@ -69,7 +69,7 @@
 
                                                 <!-- Modal body -->
                                                 <div class="modal-body">
-                                                <form action="/tasks/edit/subtask/{{$todolist->id}}" method="POST">
+                                                <form action="/tasks/edit/task/{{$todolist->id}}" method="POST">
                                                                     @csrf
                                                                     @method('PUT')
                                                                     <input type="text" name="name" value="{{ $todolist->name}}">
