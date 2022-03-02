@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\TodoList;
@@ -16,10 +16,8 @@ class TodoListController extends Controller
             'name' => 'required',
         ]);
       
-       
         $list = new TodoList();
         $list->name = $request->get('name');
-
         $list->user_id = Auth::user()->id;
         $list->save();
 
@@ -28,7 +26,6 @@ class TodoListController extends Controller
     public function show($list_id){
 
         $todolist = Auth::user()->todo_list()->findOrFail($list_id);
-
         return view('tasks', compact('todolist'));
     }
 
@@ -44,6 +41,7 @@ class TodoListController extends Controller
     }
 
     public function markTaskAsDone(Request $request, $list_id){
+
         $list_item_id = $request->get('list_item_id');
         $is_done = $request->get('is_done');
 
@@ -57,6 +55,7 @@ class TodoListController extends Controller
 
     public function destroy($list_id){
         $todolist = Auth::user()->todo_list()->findOrFail($list_id);
+        
         if($todolist->list_items()->count()){
             return back()->withErrors(' Please delete Subtasks ');
         }
@@ -66,40 +65,33 @@ class TodoListController extends Controller
 
     }
     public function removesubtask($list_id){
-        // $todolist = Auth::user()->todo_list()->findOrFail($list_id);
-        
-        // if($todolist->list_items()->count()){
-        //     return back()->withErrors(' Please delete Subtasks ');
-        // }
-        // $todolist = Auth::user()->todo_list()->findOrFail($list_id)->get();
+     
         $list_item =ListItem::find($list_id)->delete();
-            
-    
         return redirect()->back()->with('status', 'Successfully deleted!');
 
     }
-    public function edittodo(Request $request, $list_id){
+    public function edittodo(Request $request, $id){
+        
         $request->validate([
             'name' => 'required|max:200'
         ]);
-
-        $todolist = Auth::user()->todo_list()->findOrFail($list_id);
+        $todolist = Auth::user()->todo_list()->findOrFail($id);
         $todolist->name = $request->name;
         $todolist->save();
         
-        return redirect()->back()->with('status', 'Successfully deleted!');
+        return redirect()->back()->with('status', 'Successfully updated!');
     }
-    public function editsubtask(Request $request, $list_id){
+    public function editsubtask(Request $request, $id){
 
         $request->validate([
             'task' => 'required|max:200'
         ]);
 
-        $list_item = Auth::user()->list_items()->findOrFail($list_id);
+        $list_item = Auth::user()->list_items()->findOrFail($id);
         $list_item->task = $request->task;
         $list_item->save();
         
-        return redirect()->back()->with('status', 'Successfully deleted!');
+        return redirect()->back()->with('status', 'Successfully updated!');
         
     }
 

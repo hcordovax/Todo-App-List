@@ -2,18 +2,27 @@
 <style>
     .text1{
         color: green;
+        font-family: sans-serif;
+      
     }
     .text2{
-        color: red;
+        color: black;
+        font-family: sans-serif;
+       
+    }
+    .text3{
+        color: blue;
+        font-family: sans-serif;
     }
     
 </style>
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Todo-List Application') }}</div>
+                <div class="card-header">{{ __('Todo-List App') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -36,7 +45,7 @@
                         @csrf
                         <div class="row">
                             <div class="col">
-                                <input class="form-control" type="text" name="name">    
+                                <input class="form-control" type="text" name="name" placeholder="Create Todo-List Now">    
                             </div>
                             <div class="col">
                                 <input class="btn btn-success text-light" type="submit" value="Create Todo" >
@@ -47,41 +56,33 @@
                     <ul class="list-group">
                         @foreach($todoLists as $todolist)
                             <li class="list-group-item">
-                                <div>
-                                        <h5><a href="/tasks/{{$todolist->id}}">{{$todolist->name}}</a></h5>
+                                <div>   
+                                    <a href="/tasks/{{$todolist->id}}" class="btn btn-outline-dark">{{$todolist->name}}</a><br>
+                                    <text class="text1"> Done: {{ $todolist->count_done }}</text> | <text class="text2">Total Sub-Task: {{$todolist->list_items()->count()}}</text> | <textt class="text3">created : {{ $todolist->created_at->diffForHumans() }} </text> 
+                                    @if(!$todolist->list_items()->count()) 
+                                    <a href="/tasks/delete/{{$todolist->id}}" class="btn btn-danger btn-md" >Delete</a>
+                                    @endif 
+                                    <button class="btn btn-warning" type="button" data-bs-toggle="collapse"  data-bs-target="#collapseOne" aria-expanded="false">Edit</button>
+                                    
+                                        <div class="collapse mt-2" id="collapseOne">
+                                            <div class="card card-body">
+                                                <form action="{{ url('/tasks/edit/todo/'.$todolist->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="text" name='name' value="{{$todolist->name}}" >
+                                                    <button class="btn btn-secondary">Update</button>
+                                                </form> 
+                                            </div>
+                                        </div> 
                                         
-                                        <a href="/tasks/edit/task/{{$todolist->id}}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" >Edit</a>
-                                        @if(!$todolist->list_items()->count()) 
-                                        <a href="/tasks/delete/{{$todolist->id}}" class="btn btn-danger" >Delete</a>
-                                        @endif
-                                        <text class="text1"> Done: {{ $todolist->count_done }}</text> | <text class="text2">Total Subtask: {{$todolist->list_items()->count()}}</text> 
+                                        <!-- Open Modal -->
+                                                    
+                                        <!-- Close Modal -->
 
-                                            <!-- The Modal -->
-                                            <div class="modal fade" id="myModal">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-
-                                                <!-- Modal Header -->
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Editing {{$todolist->name}} </h4>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-
-                                                <!-- Modal body -->
-                                                    <div class="modal-body">
-                                                        <form action="/tasks/edit/task/{{$todolist->id}}" method="POST">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <input type="text" name="name" value="{{ $todolist->name}}">
-                                                            <button class="btn btn-warning" type="submit">Update</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            </div>
-                                </div>
+                                </div>  
+                                
                             </li>
-                            <br>
+
                         @endforeach
                     </ul>
                 </div>
