@@ -60,26 +60,40 @@
                             <label for="packers" class="strikethrough">{{ $list_item->task}}</label> 
                              
                         </form>
-
+                        
+                        created : {{ $list_item->created_at->diffForHumans() }} || updated : {{ $list_item->updated_at->diffForHumans() }}
                         <!-- Button For Editing -->
                             @if($list_item->is_done == false)
-                            <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false">Edit</button>
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editsubtaskmodal{{$list_item->id}}">Edit</button>
                             @endif
-                            <div class="collapse mt-2" id="collapseOne">
-                                <div class="card card-body">
-                                    <form action="{{ url('/tasks/edit/subtask/'.$list_item->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <input type="text" name='task' value="{{$list_item->task}}">
-                                        <button class="btn btn-secondary">Update</button>
-                                    </form> 
+                            
+                            @if(isset($todolist))
+                            <!--Open Modal -->
+                            <div class="modal fade" id="editsubtaskmodal{{$list_item->id}}" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editmodal{{$todolist->id}}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editsubtaskmodal{{$list_item->id}}">Edit {{$list_item->task}}</h5>
+                                            <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                    <div class="modal-body">
+                                        <form action="{{ url('/tasks/edit/subtask/'.$list_item->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="text" name='task' value="{{$list_item->task}}" >
+                                            <button class="btn btn-secondary btn-sm">Update</button>
+                                        </form> 
+                                    </div>
                                 </div>
                             </div>
-                        <!-- Button For Deleting -->
-                            @if($list_item->is_done == true)
-                            <a href="/tasks/delete/subtasks/{{$list_item->id}}" class="btn btn-danger" >Delete</a>
-                            @endif
-                            created : {{ $list_item->created_at->diffForHumans() }} || updated : {{ $list_item->updated_at->diffForHumans() }}
+                        </div>
+                        <!-- Close Modal -->
+                        @endif
+            <!-- Button For Deleting -->
+            @if($list_item->is_done == true)
+            <a href="/tasks/delete/subtasks/{{$list_item->id}}" class="btn btn-danger btn-sm" >Delete</a>
+            @endif
+                
                     </div>
                 </li>
                 @endforeach
